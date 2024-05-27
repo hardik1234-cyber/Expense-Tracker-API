@@ -1,8 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy import select
-from sqlmodel import Session
-from database.database_connection import init_db
-
+from fastapi import FastAPI, Depends, HTTPException,APIRouter
+from services.user_registration.registration import registration_router 
 
 app = FastAPI()
 
@@ -11,3 +8,4 @@ app = FastAPI()
 def test():
     return {"ping":"pong"}
 
+app.include_router(registration_router)
