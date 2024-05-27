@@ -1,12 +1,12 @@
 from typing import List
-from fastapi import Depends,APIRouter
+from fastapi import Depends,APIRouter,status
 from sqlmodel import Session, select
 from database.database_connection import get_session
 from schemas.user_registration.user_model import BaseUserModel, UserResponseModel
 from database.tables import User
 registration_router = APIRouter()
 
-@registration_router.post('/signup')
+@registration_router.post('/signup',status_code=status.HTTP_201_CREATED)
 def user_sign_up(user: BaseUserModel, db: Session = Depends(get_session)):
     new_user = User(username=user.username,password=user.password,email=user.email)
     db.add(new_user)
@@ -15,12 +15,12 @@ def user_sign_up(user: BaseUserModel, db: Session = Depends(get_session)):
     return UserResponseModel(id=new_user.id, username=new_user.username, email=new_user.email)
 
     
-@registration_router.get('/users',response_model=List[UserResponseModel])
+@registration_router.get('/users',response_model=List[UserResponseModel],status_code=status.HTTP_200_OK)
 def get_all_users(db: Session = Depends(get_session)):
     all_users = db.exec(select(User)).all()
     return all_users
 
-@registration_router.delete('/delete')
+@registration_router.delete('/delete',status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_name:str,db: Session = Depends(get_session)):
     deleteuser = db.exec(select(User).where(User.username == user_name)).first()
     db.delete(deleteuser)
