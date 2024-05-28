@@ -4,30 +4,34 @@ from sqlmodel import Session, select
 from database.database_connection import get_session
 from database.tables import User
 from schemas.authentication.auth_model import UserSignUp, UserLogin
-from services.authentication.utils import hash_pass
+from services.authentication.utils import hash_pass,verify_pass
 
 auth_router = APIRouter(tags=['Authentication'])
 
 
 @auth_router.post('/signup',status_code=status.HTTP_201_CREATED)
 def sign_up(user: UserSignUp, db: Session = Depends(get_session)):
-
-    hashed_password = hash_pass(user.password)
-    print(hashed_password)
-    new_user = User(username=user.username,password=hashed_password,email=user.email)
+    new_user = User(username=user.username,password=hash_pass(user.password),email=user.email)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return "Registered"
+    return "User Registered"
 
 @auth_router.post('/login')
 def login(user_creds:UserLogin,db: Session = Depends(get_session)):
+    user = db.exec(select(User).where(User.username == user_creds.username)).one_or_none()
 
-    user = db.exec(select(User).filter(User.username == user_creds.username))
-
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Invalid Credentials")
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User Not Found"
+        )
     
+    if not verify_pass(user_creds.password,user.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect email or password"
+        )
     return "Logged in Successfully!"
     
 
