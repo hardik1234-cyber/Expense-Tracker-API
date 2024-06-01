@@ -1,6 +1,5 @@
 from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlmodel import Session, select
-
 from database.database_connection import get_session
 from database.tables import User
 from schemas.authentication.auth_model import Token, UserSignUp, UserLogin
@@ -24,19 +23,19 @@ def login(user_creds:UserLogin,db: Session = Depends(get_session)):
 
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User Not Found"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid Credentials!"
         )
     
     if not verify_pass(user_creds.password,user.password):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid Credentials!"
         )
     
     access_token = create_access_token(data={"username": user.username})
 
-    return {"access_token": access_token,"token_type": "bearer"}
+    return Token(access_token=access_token,token_type="bearer")
             
 
     
