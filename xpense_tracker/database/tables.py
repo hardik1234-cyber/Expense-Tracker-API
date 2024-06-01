@@ -1,9 +1,6 @@
-import uuid
 from sqlmodel import SQLModel,Field
-from uuid import uuid4,UUID
 
 class User(SQLModel,table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    username: str 
+    username: str = Field(index=True, unique=True,primary_key=True)
     password: str
-    email: str
+    email: str = Field(index=True, unique=True)
