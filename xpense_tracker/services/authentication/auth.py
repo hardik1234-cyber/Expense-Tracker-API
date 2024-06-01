@@ -3,8 +3,9 @@ from sqlmodel import Session, select
 
 from database.database_connection import get_session
 from database.tables import User
-from schemas.authentication.auth_model import UserSignUp, UserLogin
+from schemas.authentication.auth_model import Token, UserSignUp, UserLogin
 from services.authentication.utils import hash_pass,verify_pass
+from services.authentication.oauth2 import create_access_token
 
 auth_router = APIRouter(tags=['Authentication'])
 
@@ -17,7 +18,7 @@ def sign_up(user: UserSignUp, db: Session = Depends(get_session)):
     db.refresh(new_user)
     return "User Registered"
 
-@auth_router.post('/login')
+@auth_router.post('/login',response_model=Token)
 def login(user_creds:UserLogin,db: Session = Depends(get_session)):
     user = db.exec(select(User).where(User.username == user_creds.username)).one_or_none()
 
@@ -32,8 +33,11 @@ def login(user_creds:UserLogin,db: Session = Depends(get_session)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect email or password"
         )
-    return "Logged in Successfully!"
     
+    access_token = create_access_token(data={"username": user.username})
+
+    return {"access_token": access_token,"token_type": "bearer"}
+            
 
     
 
