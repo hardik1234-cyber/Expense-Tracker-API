@@ -26,7 +26,7 @@ def login(user_creds:UserLogin,db: Session = Depends(get_session)):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid Credentials!"
         )
-    
+
     if not verify_pass(user_creds.password,user.password):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -37,11 +37,3 @@ def login(user_creds:UserLogin,db: Session = Depends(get_session)):
 
     return Token(access_token=access_token,token_type="bearer")
             
-
-    
-
-    
-
-
-
-
