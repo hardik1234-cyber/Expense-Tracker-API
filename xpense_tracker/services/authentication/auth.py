@@ -15,6 +15,7 @@ def sign_up(user: UserSignUp, db: Session = Depends(get_session)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    db.close()
     return "User Registered"
 
 @auth_router.post('/login',response_model=Token)
@@ -34,6 +35,6 @@ def login(user_creds:UserLogin,db: Session = Depends(get_session)):
         )
     
     access_token = create_access_token(data={"username": user.username})
-
+    db.close()
     return Token(access_token=access_token,token_type="bearer")
             

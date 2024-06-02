@@ -18,7 +18,7 @@ def get_user_details(username: str,get_logged_in_user = Depends(get_current_user
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-
+    db.close()
     return UserBaseModel.model_validate(user)
 
     
@@ -43,7 +43,7 @@ def update_user(user_update: UserUpdateModel,get_logged_in_user = Depends(get_cu
     db.add(user)
     db.commit()
     db.refresh(user)
-
+    db.close()
     return UserBaseModel(username=user.username,email=user.email)
 
 
@@ -60,5 +60,5 @@ def delete_user(username:str,get_logged_in_user = Depends(get_current_user),db: 
     
     db.delete(user)
     db.commit()
-
+    db.close()
     return f"User {username} successfully deleted !"
