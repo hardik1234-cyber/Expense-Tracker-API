@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import Depends, HTTPException,status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from database.database_connection import get_session
 from database.tables import User
@@ -37,9 +37,14 @@ def verify_token_access(token: str, credentials_exception):
 
     return token_data
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(get_session)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail="Could not Validate Credentials",
                                           headers={"WWW-Authenticate": "Bearer"})
 
     return verify_token_access(token, credentials_exception)
+    # token_data = verify_token_access(token, credentials_exception)
+    # user = db.exec(select(User).where(User.username == token_data.username)).one_or_none()
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    # return user
