@@ -14,4 +14,4 @@ EXPOSE 8080
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["uvicorn", "main:app","--reload","--host", "127.0.0.1", "--port", "8080"]
+CMD ["uvicorn", "main:app","--reload","--host", "0.0.0.0", "--port", "8080"]
