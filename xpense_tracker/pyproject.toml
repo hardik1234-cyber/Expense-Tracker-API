@@ -10,7 +10,6 @@ packages = [{include = "xpense_tracker"}]
 python = "^3.10"
 fastapi = "^0.111.0"
 sqlmodel = "^0.0.18"
-psycopg2 = "^2.9.9"
 poetry = "^1.8.3"
 alembic = "^1.13.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
