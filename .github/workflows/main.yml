@@ -1,3 +1,27 @@
+# name: FastAPI Docker Build and Push
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Docker Build
+#         run: docker build -t '${{ secrets.DOCKER_USERNAME }}'/fastapi-docker:'${{ github.sha }}' .
+
+#       - name: Logging into Docker Hub
+#         run: docker login --username '${{ secrets.DOCKER_USERNAME }}' --password '${{ secrets.DOCKER_PASSWORD }}'
+
+#       - name: Push the image to docker hub
+#         run: docker push '${{ secrets.DOCKER_USERNAME }}'/fastapi-docker:'${{ github.sha }}'
+
+
 name: FastAPI Docker Build and Push
 
 on:
@@ -12,13 +36,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Docker Build
-        run: docker build -t '${{ secrets.DOCKER_USERNAME }}'/fastapi-docker:'${{ github.sha }}' .
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/fastapi-docker:${{ github.sha }}
 
       - name: Logging into Docker Hub
-        run: docker login --username '${{ secrets.DOCKER_USERNAME }}' --password '${{ secrets.DOCKER_PASSWORD }}'
-
-      - name: Push the image to docker hub
-        run: docker push '${{ secrets.DOCKER_USERNAME }}'/fastapi-docker:'${{ github.sha }}'
-
-
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
