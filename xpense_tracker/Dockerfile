@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock /app/
+COPY xpense_tracker/pyproject.toml xpense_tracker/poetry.lock /app/
 
 RUN pip install poetry \
     && poetry config virtualenvs.create false \
