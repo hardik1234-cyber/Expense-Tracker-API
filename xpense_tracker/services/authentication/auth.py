@@ -1,10 +1,10 @@
 from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlmodel import Session, select
-from database.database_connection import get_session
-from database.tables import User
-from schemas.authentication.auth_model import Token, UserSignUp, UserLogin
-from services.authentication.utils import hash_pass,verify_pass
-from services.authentication.oauth2 import create_access_token
+from xpense_tracker.database.database_connection import get_session
+from xpense_tracker.database.tables import User
+from xpense_tracker.schemas.authentication.auth_model import Token, UserSignUp, UserLogin
+from xpense_tracker.services.authentication.utils import hash_pass,verify_pass
+from xpense_tracker.services.authentication.oauth2 import create_access_token
 
 auth_router = APIRouter(tags=['Authentication'])
 
