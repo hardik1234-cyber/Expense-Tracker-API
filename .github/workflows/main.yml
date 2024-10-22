@@ -1,4 +1,4 @@
-name: FastAPI Docker Build and Push
+name: Xpense Tracker prod push
 
 on:
   push:
