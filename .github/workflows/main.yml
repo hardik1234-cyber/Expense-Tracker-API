@@ -12,7 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Change to xpense_tracker directory
+        run: cd xpense_tracker
+
       - name: Docker Build
+        working-directory: ./xpense_tracker
         run: docker build -t '${{ secrets.DOCKER_USERNAME }}'/fastapi-docker:'${{ github.sha }}' -f Dockerfile .
 
       - name: Logging into Docker Hub
