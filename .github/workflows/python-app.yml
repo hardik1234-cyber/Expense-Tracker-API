@@ -1,0 +1,26 @@
+name: Xpense Tracker dev push
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Change to xpense_tracker directory
+        run: cd xpense_tracker
+
+      - name: Docker Build
+        working-directory: ./xpense_tracker
+        run: docker build -t '${{ secrets.DOCKER_USERNAME }}'/xpense_tracker_backend:latest -f Dockerfile .
+
+      - name: Logging into Docker Hub
+        run: docker login --username '${{ secrets.DOCKER_USERNAME }}' --password '${{ secrets.DOCKER_PASSWORD }}'
+
+      - name: Push the image to docker hub
+        run: docker push '${{ secrets.DOCKER_USERNAME }}'/xpense_tracker_backend:latest
