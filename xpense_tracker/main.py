@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from services.authentication.auth import auth_router
-from services.UserManagementSystem.ums import ums_router
-from services.ExpenseManagementSystem.ems import ems_router
-from services.ReportingManagementSystem.rms import rms_router
+from xpense_tracker.services.authentication.auth import auth_router
+from xpense_tracker.services.UserManagementSystem.ums import ums_router
+from xpense_tracker.services.ExpenseManagementSystem.ems import ems_router
+from xpense_tracker.services.ReportingManagementSystem.rms import rms_router
 
 app = FastAPI()
 
