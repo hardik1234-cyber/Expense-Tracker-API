@@ -1,10 +1,10 @@
 from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlmodel import Session, select
-from database.database_connection import get_session
-from database.tables import User
-from schemas.ums.ums_model import UserBaseModel, UserUpdateModel
-from services.authentication.oauth2 import get_current_user
-from services.authentication.utils import hash_pass
+from xpense_tracker.database.database_connection import get_session
+from xpense_tracker.database.tables import User
+from xpense_tracker.schemas.ums.ums_model import UserBaseModel, UserUpdateModel
+from xpense_tracker.services.authentication.oauth2 import get_current_user
+from xpense_tracker.services.authentication.utils import hash_pass
 
 ums_router = APIRouter(tags=['User Management System'])
 

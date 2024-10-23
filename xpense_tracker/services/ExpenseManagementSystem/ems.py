@@ -1,9 +1,9 @@
 from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlmodel import Session, select
-from database.database_connection import get_session
-from database.tables import User,Expense
-from schemas.ems.ems_model import ExpenseDetails, ExpenseModel, ExpenseUpdateModel
-from services.authentication.oauth2 import get_current_user
+from xpense_tracker.database.database_connection import get_session
+from xpense_tracker.database.tables import User,Expense
+from xpense_tracker.schemas.ems.ems_model import ExpenseDetails, ExpenseModel, ExpenseUpdateModel
+from xpense_tracker.services.authentication.oauth2 import get_current_user
 
 ems_router = APIRouter(tags=['Expense Management System'])
 

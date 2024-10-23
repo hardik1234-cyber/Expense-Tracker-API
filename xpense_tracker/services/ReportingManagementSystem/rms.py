@@ -1,9 +1,9 @@
 from datetime import date
 from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlmodel import Session, select
-from database.database_connection import get_session
-from database.tables import Expense
-from services.authentication.oauth2 import get_current_user
+from xpense_tracker.database.database_connection import get_session
+from xpense_tracker.database.tables import Expense
+from xpense_tracker.services.authentication.oauth2 import get_current_user
 
 
 rms_router = APIRouter(tags=['Reprting Management System'])

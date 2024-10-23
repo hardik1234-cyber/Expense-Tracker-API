@@ -3,7 +3,7 @@ name: Xpense Tracker prod push
 on:
   push:
     branches:
-      - main
+      - test-cases
 
 jobs:
   build:
