@@ -6,6 +6,10 @@ from services.ReportingManagementSystem.rms import rms_router
 
 app = FastAPI()
 
+@app.get('/')
+def on_startup():
+    return {"Welcome to Expense Tracker API"}
+
 app.include_router(auth_router)
 app.include_router(ums_router)
 app.include_router(ems_router)
