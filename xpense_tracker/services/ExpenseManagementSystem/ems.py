@@ -1,11 +1,14 @@
-from fastapi import APIRouter,Depends,status,HTTPException,Response
+import json
+from fastapi import APIRouter,Depends,status,HTTPException,Response,Request
+from httpx import request
 from sqlmodel import Session, select
 from database.database_connection import get_session
 from database.tables import User,Expense
 from schemas.ems.ems_model import ExpenseDetails, ExpenseModel, ExpenseUpdateModel
 from services.authentication.oauth2 import get_current_user
 from logs.logging import logger
-
+from redis import Redis
+# from main import redis_client
 
 ems_router = APIRouter(tags=['Expense Management System'])
 
@@ -25,9 +28,15 @@ def add_expense(user:ExpenseModel ,get_logged_in_user = Depends(get_current_user
     return "Expense added"
 
 @ems_router.get('/get_expense',status_code=status.HTTP_200_OK)
-def get_expense(username: str,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def get_expense(username: str,request:Request,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
 
+    redis_client = request.app.state.redis
     expense = db.exec(select(Expense).where(Expense.username == username)).one_or_none()
+    value = redis_client.get('entries')
+    if value is None:
+        value = expense.json()
+        data_str = json.dumps(value)
+        redis_client.set('entries',data_str)
 
     if expense is None:
         logger.error("No expense Found")
