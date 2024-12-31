@@ -7,8 +7,7 @@ from database.tables import User,Expense
 from schemas.ems.ems_model import ExpenseDetails, ExpenseModel, ExpenseUpdateModel
 from services.authentication.oauth2 import get_current_user
 from logs.logging import logger
-from redis import Redis
-# from main import redis_client
+
 
 ems_router = APIRouter(tags=['Expense Management System'])
 
