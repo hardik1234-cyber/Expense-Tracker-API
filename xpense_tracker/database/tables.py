@@ -1,6 +1,7 @@
 from typing import List
 from sqlmodel import Relationship, SQLModel,Field
 from datetime import datetime
+from uuid import uuid4, UUID
 
 class User(SQLModel,table=True):
     username: str = Field(index=True, unique=True,primary_key=True)
@@ -11,6 +12,7 @@ class User(SQLModel,table=True):
 
 
 class Expense(SQLModel,table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
     username: str = Field(foreign_key='user.username',primary_key=True)
     amount: float
     category: str
