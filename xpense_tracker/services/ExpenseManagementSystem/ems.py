@@ -30,7 +30,7 @@ def add_expense(user:ExpenseModel ,get_logged_in_user = Depends(get_current_user
 def get_expense(username: str,request:Request,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
 
     redis_client = request.app.state.redis
-    expense = db.exec(select(Expense).where(Expense.username == username)).one_or_none()
+    expense = db.exec(select(Expense).where(Expense.username == username)).fetchall()
     value = redis_client.get('entries')
     if value is None:
         value = expense.json()
@@ -44,7 +44,21 @@ def get_expense(username: str,request:Request,get_logged_in_user = Depends(get_c
             detail="expense not found"
         )
     
-    return ExpenseDetails(amount=expense.amount,category=expense.category,description=expense.description,date=expense.date)
+    expense_details_list = []
+
+    for e in expense:
+        detail = ExpenseDetails(
+            amount=e.amount,
+            category=e.category,
+            description=e.description,
+            date=e.date
+        )
+        expense_details_list.append(detail)
+
+    return expense_details_list
+
+    
+    # return ExpenseDetails(amount=expense.amount,category=expense.category,description=expense.description,date=expense.date)
     
 
 
