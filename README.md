@@ -1,15 +1,5 @@
 💸 Expense Tracker API
 The Expense Tracker API is a robust and scalable RESTful service designed to help users manage their personal finances effectively. Built with modern web technologies, it allows for seamless tracking of expenses, categorization, and insightful financial analysis.​
-GitHub
-+2
-GitHub
-+2
-GitHub
-+2
-GitHub
-+1
-GitHub
-+1
 
 🚀 Features
 User Authentication: Secure user registration and login functionalities to protect personal financial data.
