@@ -242,6 +242,23 @@ Response:
 
 ---
 
+##  CI/CD Pipeline for Production
+
+The application uses GitHub Actions for continuous integration and continuous deployment (CI/CD). Upon a push to the `main` branch, the following steps are triggered:
+
+1. **Checkout Code**: The latest code from the repository is checked out.
+2. **Change to `xpense_tracker` Directory**: The pipeline navigates to the `xpense_tracker` directory where the Dockerfile is located.
+3. **Docker Build**: A Docker image for the backend is built using the provided Dockerfile.
+4. **Docker Login**: The pipeline logs into Docker Hub using credentials stored in GitHub Secrets (`DOCKER_USERNAME` and `DOCKER_PASSWORD`).
+5. **Push to Docker Hub**: The built Docker image is pushed to Docker Hub under the `xpense_tracker_backend` repository with the `latest` tag.
+
+This process ensures that every change made to the `main` branch is automatically built, tested, and pushed to Docker Hub, ready for deployment in production.
+
+### Docker Hub Credentials
+
+- `DOCKER_USERNAME`: Your Docker Hub username.
+- `DOCKER_PASSWORD`: Your Docker Hub password or access token (stored as a GitHub secret).
+
 ## 📌 Contribution
 
 Feel free to fork this repo, create a feature branch, and open a pull request!  
