@@ -1,24 +1,20 @@
 FROM python:3.10-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy dependency file
-COPY requirements.txt .
+COPY pyproject.toml poetry.lock /app/
 
-# Install dependencies
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+RUN pip install poetry \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-dev --no-interaction --no-ansi
 
-# Copy the rest of the application
-COPY . .
+COPY . /app
 
-# Expose the app port
+WORKDIR /app/xpense_tracker
+
 EXPOSE 8000
 
-# Ensure logs are unbuffered
 ENV PYTHONUNBUFFERED=1
 
-# Run the app with uvicorn
 CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
 
