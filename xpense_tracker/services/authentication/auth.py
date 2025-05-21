@@ -1,4 +1,5 @@
-from fastapi import APIRouter,Depends,status,HTTPException,Response
+from fastapi import APIRouter,Depends,status,HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from database.database_connection import get_session
 from database.tables import User
@@ -28,7 +29,7 @@ def sign_up(user: UserSignUp, db: Session = Depends(get_session)):
     return "User Registered"
 
 @auth_router.post('/login',response_model=Token)
-def login(user_creds:UserLogin,db: Session = Depends(get_session)):
+def login(user_creds: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_session)):
     
     user = db.exec(select(User).where(User.username == user_creds.username)).one_or_none()
 
