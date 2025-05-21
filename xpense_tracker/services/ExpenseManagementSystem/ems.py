@@ -29,13 +29,13 @@ def add_expense(user:ExpenseModel ,get_logged_in_user = Depends(get_current_user
 @ems_router.get('/get_expense',status_code=status.HTTP_200_OK)
 def get_expense(username: str,request:Request,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
 
-    redis_client = request.app.state.redis
+    # redis_client = request.app.state.redis
     expense = db.exec(select(Expense).where(Expense.username == username)).fetchall()
-    value = redis_client.get('entries')
-    if value is None:
-        value = expense.json()
-        data_str = json.dumps(value)
-        redis_client.set('entries',data_str)
+    # value = redis_client.get('entries')
+    # if value is None:
+    #     value = expense.json()
+    #     data_str = json.dumps(value)
+        # redis_client.set('entries',data_str)
 
     if expense is None:
         logger.error("No expense Found")
