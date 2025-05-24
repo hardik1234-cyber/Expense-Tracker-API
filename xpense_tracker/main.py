@@ -17,9 +17,9 @@ def on_startup():
 #     app.state.redis = Redis(host='localhost',port=6379)
 #     app.state.http_client = httpx.AsyncClient()
 
-@app.on_event("shutdown")
-def shutdown_event():
-    app.state.redis.close()
+# @app.on_event("shutdown")
+# def shutdown_event():
+#     app.state.redis.close()
 
 app.include_router(auth_router)
 app.include_router(ums_router)
