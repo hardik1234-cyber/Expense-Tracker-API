@@ -10,8 +10,6 @@ RUN pip install poetry \
 
 COPY . /app
 
-WORKDIR /app/xpense_tracker
-
 EXPOSE 8000
 
 ENV PYTHONUNBUFFERED=1
