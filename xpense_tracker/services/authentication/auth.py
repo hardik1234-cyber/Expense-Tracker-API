@@ -14,6 +14,15 @@ auth_router = APIRouter(tags=['Authentication'])
 @auth_router.post('/signup',status_code=status.HTTP_201_CREATED)
 def sign_up(user: UserSignUp, db: Session = Depends(get_session)):
 
+    existing_user = db.exec(select(User).where(User.username == user.username)).first()
+
+    if existing_user:
+        logger.warning("Username already exists")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already exists"
+        )
+    
     new_user = User(username=user.username,password=hash_pass(user.password),email=user.email)
 
     try:
@@ -29,7 +38,7 @@ def sign_up(user: UserSignUp, db: Session = Depends(get_session)):
     return "User Registered"
 
 @auth_router.post('/login',response_model=Token)
-def login(user_creds: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_session)):
+def login(user_creds: UserLogin,db: Session = Depends(get_session)):
     
     user = db.exec(select(User).where(User.username == user_creds.username)).one_or_none()
 
