@@ -15,4 +15,3 @@ class Token(SQLModel):
 
 class DataToken(SQLModel):
     username: str
-

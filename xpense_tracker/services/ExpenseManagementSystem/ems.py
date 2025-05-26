@@ -14,8 +14,15 @@ from datetime import datetime, timezone
 ems_router = APIRouter(tags=['Expense Management System'])
 
 @ems_router.post('/add_expense',status_code=status.HTTP_201_CREATED)
-def add_expense(user:ExpenseModel ,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def add_expense(user:ExpenseModel ,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
     expense = Expense(username=user.username,amount=user.amount,category=user.category,description=user.description,date=datetime.now(timezone.utc))
+    
+    if get_logged_in_user.username != user.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
+    
     try:
         db.add(expense)
         db.commit()
@@ -29,9 +36,15 @@ def add_expense(user:ExpenseModel ,get_logged_in_user = Depends(get_current_user
     return "Expense added"
 
 @ems_router.get('/get_expense',status_code=status.HTTP_200_OK)
-def get_expense(username: str,request:Request,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def get_expense(username: str,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     expenses = db.exec(select(Expense).where(Expense.username == username)).fetchall()
+
+    if get_logged_in_user.username != username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
 
     if expenses is None:
         logger.error("No expense Found")
@@ -56,9 +69,10 @@ def get_expense(username: str,request:Request,get_logged_in_user = Depends(get_c
 
 
 @ems_router.get('/get_expense_by_id',status_code=status.HTTP_200_OK)
-def get_expense(id: UUID,request:Request,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def get_expense(id: UUID,request:Request,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     expense = db.exec(select(Expense).where(Expense.id == id)).one_or_none()
+
 
     if expense is None:
         logger.error("No expense Found")
@@ -66,6 +80,13 @@ def get_expense(id: UUID,request:Request,get_logged_in_user = Depends(get_curren
             status_code=status.HTTP_404_NOT_FOUND,
             detail="expense not found"
         )
+    
+    if get_logged_in_user.username != expense.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
+
     
     expense= ExpenseDetails(
         id=expense.id,
@@ -79,7 +100,7 @@ def get_expense(id: UUID,request:Request,get_logged_in_user = Depends(get_curren
 
 
 @ems_router.put('/update_expense',status_code=status.HTTP_202_ACCEPTED)
-def update_expense(username: str,expense_model: ExpenseUpdateModel,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def update_expense(username: str,expense_model: ExpenseUpdateModel,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     expense = db.exec(select(Expense).where(Expense.username == username)).one_or_none()
 
@@ -90,6 +111,12 @@ def update_expense(username: str,expense_model: ExpenseUpdateModel,get_logged_in
             detail="Expense not found"
         )
     
+    if get_logged_in_user.username != expense.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
+
     if expense_model.amount is not None:
         logger.info("Updated amount")
         expense.amount = expense_model.amount
@@ -114,7 +141,7 @@ def update_expense(username: str,expense_model: ExpenseUpdateModel,get_logged_in
 
 
 @ems_router.put('/update_expense_by_id',status_code=status.HTTP_202_ACCEPTED)
-def update_expense(id: UUID,expense_model: ExpenseUpdateModel,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def update_expense(id: UUID,expense_model: ExpenseUpdateModel,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     expense = db.exec(select(Expense).where(Expense.id == id)).one_or_none()
 
@@ -125,6 +152,12 @@ def update_expense(id: UUID,expense_model: ExpenseUpdateModel,get_logged_in_user
             detail="Expense not found"
         )
     
+    if get_logged_in_user.username != expense.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
+
     if expense_model.amount is not None:
         logger.info("Updated amount")
         expense.amount = expense_model.amount
@@ -149,7 +182,7 @@ def update_expense(id: UUID,expense_model: ExpenseUpdateModel,get_logged_in_user
 
 
 @ems_router.delete('/delete_expense_by_id',status_code=status.HTTP_204_NO_CONTENT)
-def delete_expense(id:UUID,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def delete_expense(id:UUID,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     expense = db.exec(select(Expense).where(Expense.id == id)).one_or_none()
 
@@ -159,6 +192,13 @@ def delete_expense(id:UUID,get_logged_in_user = Depends(get_current_user),db: Se
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Expense not found"
         )
+    
+    if get_logged_in_user.username != expense.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
+
     
     try:
         db.delete(expense)
@@ -171,7 +211,7 @@ def delete_expense(id:UUID,get_logged_in_user = Depends(get_current_user),db: Se
 
 
 @ems_router.delete('/delete_expense',status_code=status.HTTP_204_NO_CONTENT)
-def delete_expense(username:str,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def delete_expense(username:str,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     expense = db.exec(select(Expense).where(Expense.username == username)).one_or_none()
 
@@ -181,6 +221,13 @@ def delete_expense(username:str,get_logged_in_user = Depends(get_current_user),d
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Expense not found"
         )
+    
+    if get_logged_in_user.username != expense.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
+
     
     try:
         db.delete(expense)

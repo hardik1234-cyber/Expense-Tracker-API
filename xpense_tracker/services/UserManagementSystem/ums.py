@@ -10,10 +10,16 @@ from logs.logging import logger
 ums_router = APIRouter(tags=['User Management System'])
 
 @ums_router.get('/user_details',response_model=UserBaseModel,status_code=status.HTTP_200_OK)
-def get_user_details(username: str,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def get_user_details(username: str,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
     
     try: 
         user = db.exec(select(User).where(User.username == username)).one_or_none()
+
+        if get_logged_in_user.username != username:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to access this user's details"
+            )
 
         if user is None:
             logger.warning("User not found")
@@ -28,7 +34,7 @@ def get_user_details(username: str,get_logged_in_user = Depends(get_current_user
         logger.error("An error occurred while retrieving user details",e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while retrieving user details"
+            detail="Not authorized to access this user's details"
         )
     
     finally:
@@ -36,9 +42,15 @@ def get_user_details(username: str,get_logged_in_user = Depends(get_current_user
 
     
 @ums_router.put('/update_user_details',response_model=UserBaseModel,status_code=status.HTTP_202_ACCEPTED)
-def update_user(user_update: UserUpdateModel,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def update_user(user_update: UserUpdateModel,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
     
     user = db.exec(select(User).where(User.username == user_update.username)).one_or_none()
+
+    if get_logged_in_user.username != user_update.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
 
     if user is None:
         logger.warning("User not found")
@@ -79,9 +91,15 @@ def update_user(user_update: UserUpdateModel,get_logged_in_user = Depends(get_cu
 
 
 @ums_router.delete('/delete_user',status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(username:str,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def delete_user(username:str,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
 
     user = db.exec(select(User).where(User.username == username)).one_or_none()
+
+    if get_logged_in_user.username != username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
 
     if user is None:
         logger.warning("User not found")

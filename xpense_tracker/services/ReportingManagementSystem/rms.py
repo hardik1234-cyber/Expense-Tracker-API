@@ -2,7 +2,7 @@ from datetime import date
 from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlmodel import Session, select
 from database.database_connection import get_session
-from database.tables import Expense
+from database.tables import Expense, User
 from services.authentication.oauth2 import get_current_user
 from logs.logging import logger
 
@@ -10,7 +10,13 @@ rms_router = APIRouter(tags=['Reprting Management System'])
 
 
 @rms_router.get('/get_monthly_expense',status_code=status.HTTP_200_OK)
-def get_monthly_expense(username:str,month: int,year: int,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def get_monthly_expense(username:str,month: int,year: int,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
+    
+    if get_logged_in_user.username != username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
 
     start_date = date(year=year,month=month,day=1)
     if month == 12:
@@ -51,7 +57,13 @@ def get_monthly_expense(username:str,month: int,year: int,get_logged_in_user = D
     }
         
 @rms_router.get('/get_yearly_expense',status_code=status.HTTP_200_OK)
-def get_yearly_expense(username:str,year: int,get_logged_in_user = Depends(get_current_user),db: Session = Depends(get_session)):
+def get_yearly_expense(username:str,year: int,get_logged_in_user: User = Depends(get_current_user),db: Session = Depends(get_session)):
+    
+    if get_logged_in_user.username != username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this user's details"
+        )
 
     start_date = date(year=year,month=1,day=1)
     

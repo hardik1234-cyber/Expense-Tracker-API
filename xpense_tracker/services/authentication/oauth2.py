@@ -42,9 +42,8 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(g
                                           detail="Could not Validate Credentials",
                                           headers={"WWW-Authenticate": "Bearer"})
 
-    return verify_token_access(token, credentials_exception)
-    # token_data = verify_token_access(token, credentials_exception)
-    # user = db.exec(select(User).where(User.username == token_data.username)).one_or_none()
-    # if user is None:
-    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    # return user
+    token_data = verify_token_access(token, credentials_exception)
+    user = db.exec(select(User).where(User.username == token_data.username)).one_or_none()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return user
