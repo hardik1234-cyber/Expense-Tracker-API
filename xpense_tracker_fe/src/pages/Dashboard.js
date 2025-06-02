@@ -12,6 +12,7 @@ function Dashboard() {
   const [editId, setEditId] = useState(null);
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(false);
 
   const categoryTotals = expenses.reduce((acc, exp) => {
     acc[exp.category] = (acc[exp.category] || 0) + Number(exp.amount);
@@ -66,6 +67,7 @@ function Dashboard() {
         setExpenses([...expenses, res.data]);
       }
       setForm({ category: '', amount: '', description: '', date: '' });
+      setShowForm(false);
     } catch {
       alert('Failed to save expense');
     }
@@ -104,55 +106,65 @@ return (
 
     <div className="dashboard-flex" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0' }}>
       <div style={{ flex: 1, minWidth: 320, marginRight: 32 }}>
-        <form onSubmit={handleSubmit} className="dashboard-form">
-          <input
-            className="login-input"
-            name="category"
-            placeholder="Category"
-            value={form.category}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="login-input"
-            name="amount"
-            type="number"
-            placeholder="Amount"
-            value={form.amount}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="login-input"
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-          />
-          <input
-            className="login-input"
-            name="date"
-            type="date"
-            placeholder="Date"
-            value={form.date}
-            onChange={handleChange}
-            required
-          />
-          <button className="login-btn" type="submit">{editId ? 'Update' : 'Add'} Expense</button>
-          {editId && (
-            <button
-              className="login-btn"
-              type="button"
-              style={{ background: '#888', color: '#fff' }}
-              onClick={() => {
-                setEditId(null);
-                setForm({ category: '', amount: '', description: '', date: '' });
-              }}
-            >
-              Cancel
-            </button>
-          )}
-        </form>
+
+{!showForm ? (
+  <button
+    className="login-btn"
+    style={{ width: '100%', margin: '32px 0' }}
+    onClick={() => setShowForm(true)}
+  >
+    Add Expense
+  </button>
+) : (
+  <form onSubmit={handleSubmit} className="dashboard-form">
+    <input
+      className="login-input"
+      name="category"
+      placeholder="Category"
+      value={form.category}
+      onChange={handleChange}
+      required
+    />
+    <input
+      className="login-input"
+      name="amount"
+      type="number"
+      placeholder="Amount"
+      value={form.amount}
+      onChange={handleChange}
+      required
+    />
+    <input
+      className="login-input"
+      name="description"
+      placeholder="Description"
+      value={form.description}
+      onChange={handleChange}
+    />
+    <input
+      className="login-input"
+      name="date"
+      type="date"
+      placeholder="Date"
+      value={form.date}
+      onChange={handleChange}
+      required
+    />
+    <button className="login-btn" type="submit">{editId ? 'Update' : 'Add'} Expense</button>
+    <button
+      className="login-btn"
+      type="button"
+      style={{ background: '#888', color: '#fff', marginLeft: 8 }}
+      onClick={() => {
+        setShowForm(false);
+        setEditId(null);
+        setForm({ category: '', amount: '', description: '', date: '' });
+      }}
+    >
+      Cancel
+    </button>
+  </form>
+)}
         <div className="dashboard-table-wrapper">
           <table className="dashboard-table">
             <thead>
