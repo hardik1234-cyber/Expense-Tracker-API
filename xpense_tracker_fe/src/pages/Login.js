@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { api, setAuthToken } from '../api/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import './Login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -24,12 +25,34 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
-      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-bg">
+      <div className="login-card">
+        <h2 className="login-title">LOGIN</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            className="login-input"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            autoComplete="username"
+          />
+          <input
+            className="login-input"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+          <button className="login-btn" type="submit">SUBMIT</button>
+        </form>
+        <div className="login-links">
+          <Link to="/register">REGISTER</Link>
+          <span> | </span>
+          <a href="#">FORGOT PASSWORD</a>
+        </div>
+      </div>
+    </div>
   );
 }
 

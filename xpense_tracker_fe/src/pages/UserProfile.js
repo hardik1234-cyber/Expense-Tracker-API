@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api, setAuthToken } from '../api/api';
+import './Login.css';
+
 
 function UserProfile() {
   const [profile, setProfile] = useState(null);
@@ -45,31 +47,55 @@ function UserProfile() {
 
   if (!profile) return <div>Loading profile...</div>;
 
-  return (
-    <div>
-      <h2>User Profile</h2>
-      {edit ? (
-        <form onSubmit={handleSave}>
-          <div>
-            <label>Username: </label>
-            <input name="username" value={form.username} onChange={handleChange} disabled />
-          </div>
-          <div>
-            <label>Email: </label>
-            <input name="email" value={form.email} onChange={handleChange} />
-          </div>
-          <button type="submit">Save</button>
-          <button type="button" onClick={handleCancel}>Cancel</button>
-        </form>
-      ) : (
-        <>
-          <p><strong>Username:</strong> {profile.username}</p>
-          <p><strong>Email:</strong> {profile.email}</p>
-          <button onClick={handleEdit}>Edit Profile</button>
-        </>
-      )}
+// ...existing code...
+return (
+  <div className="login-bg">
+    <div className="login-card" style={{ maxWidth: 400 }}>
+      <h2 className="login-title">User Profile</h2>
+      <div style={{ color: "#fff", marginTop: 24 }}>
+        {edit ? (
+          <form onSubmit={handleSave}>
+            <div style={{ marginBottom: 18 }}>
+              <strong>Username:</strong>
+              <input
+                className="login-input"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                style={{ marginLeft: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 18 }}>
+              <strong>Email:</strong>
+              <input
+                className="login-input"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                style={{ marginLeft: 8 }}
+                required
+              />
+            </div>
+            <button className="login-btn" type="submit">Save</button>
+            <button className="login-btn" type="button" style={{ marginLeft: 8, background: "#888" }} onClick={handleCancel}>Cancel</button>
+          </form>
+        ) : (
+          <>
+            <div style={{ marginBottom: 18 }}>
+              <strong>Username:</strong> {profile.username}
+            </div>
+            <div style={{ marginBottom: 18 }}>
+              <strong>Email:</strong> {profile.email}
+            </div>
+            <button className="login-btn" onClick={handleEdit}>Edit Profile</button>
+          </>
+        )}
+      </div>
     </div>
-  );
+  </div>
+);
+// ...existing code...
 }
 
 export default UserProfile;

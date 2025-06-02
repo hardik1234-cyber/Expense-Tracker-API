@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api, setAuthToken } from '../api/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
+import './Dashboard.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -91,70 +92,102 @@ function Dashboard() {
     }
   };
 
-  return (
-    <div>
-      <h2>Expenses</h2>
-      <button onClick={handleLogout}>Logout</button>
-      <Link to="/profile">
-        <button>Profile</button>
-      </Link>
+return (
+  <div className="login-bg">
+    <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1200, margin: '0 auto', paddingTop: 32 }}>
+      <h2 className="login-title" style={{ margin: 0 }}>Expenses</h2>
+      <div className="dashboard-actions">
+        <button className="login-btn" onClick={handleLogout}>Logout</button>
+        <Link to="/profile"><button className="login-btn">Profile</button></Link>
+        <Link to="/reports"><button className="login-btn">Reports</button></Link>
+      </div>
+    </div>
 
-      <Link to="/reports">
-        <button>Reports</button>
-      </Link>
-
-      <div style={{ maxWidth: 400, margin: '20px auto' }}>
+    <div className="dashboard-flex" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0' }}>
+      <div style={{ flex: 1, minWidth: 320, marginRight: 32 }}>
+        <form onSubmit={handleSubmit} className="dashboard-form">
+          <input
+            className="login-input"
+            name="category"
+            placeholder="Category"
+            value={form.category}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="login-input"
+            name="amount"
+            type="number"
+            placeholder="Amount"
+            value={form.amount}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="login-input"
+            name="description"
+            placeholder="Description"
+            value={form.description}
+            onChange={handleChange}
+          />
+          <input
+            className="login-input"
+            name="date"
+            type="date"
+            placeholder="Date"
+            value={form.date}
+            onChange={handleChange}
+            required
+          />
+          <button className="login-btn" type="submit">{editId ? 'Update' : 'Add'} Expense</button>
+          {editId && (
+            <button
+              className="login-btn"
+              type="button"
+              style={{ background: '#888', color: '#fff' }}
+              onClick={() => {
+                setEditId(null);
+                setForm({ category: '', amount: '', description: '', date: '' });
+              }}
+            >
+              Cancel
+            </button>
+          )}
+        </form>
+        <div className="dashboard-table-wrapper">
+          <table className="dashboard-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expenses.map(exp => (
+                <tr key={exp.id}>
+                  <td>{exp.category}</td>
+                  <td>{exp.amount}</td>
+                  <td>{exp.description}</td>
+                  <td>{exp.date}</td>
+                  <td>
+                    <button className="login-btn edit-btn" onClick={() => handleEdit(exp)}>Edit</button>
+                    <button className="login-btn delete-btn" onClick={() => handleDelete(exp.id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="dashboard-chart" style={{ flex: '0 0 340px', maxWidth: 400, margin: '0 auto' }}>
         <Pie data={chartData} />
       </div>
-
-
-       <form onSubmit={handleSubmit} style={{ marginTop: 20 }}></form>
-
-      <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-        <input
-          name="category"
-          placeholder="Category"
-          value={form.category}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="amount"
-          type="number"
-          placeholder="Amount"
-          value={form.amount}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-        />
-        <input
-          name="date"
-          type="date"
-          placeholder="Date"
-          value={form.date}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">{editId ? 'Update' : 'Add'} Expense</button>
-        {editId && <button type="button" onClick={() => { setEditId(null); setForm({ category: '', amount: '', description: '', date: '' }); }}>Cancel</button>}
-      </form>
-
-      <ul>
-        {expenses.map(exp => (
-          <li key={exp.id}>
-            {exp.category}: {exp.amount} ({exp.description}) [{exp.date}]
-            <button onClick={() => handleEdit(exp)}>Edit</button>
-            <button onClick={() => handleDelete(exp.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
     </div>
-  );
+  </div>
+);
 }
 
 export default Dashboard;
