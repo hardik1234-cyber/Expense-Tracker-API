@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { api, setAuthToken } from '../api/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
@@ -13,6 +13,8 @@ function Dashboard() {
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef();
 
   const categoryTotals = expenses.reduce((acc, exp) => {
     acc[exp.category] = (acc[exp.category] || 0) + Number(exp.amount);
@@ -37,6 +39,18 @@ function Dashboard() {
     localStorage.removeItem('username');
     navigate('/login');
   };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   // Fetch expenses
   useEffect(() => {
@@ -110,13 +124,39 @@ return (
       <h2 className="login-title" style={{ margin: 0, textAlign: 'center' }}>Expenses</h2>
     </div>
 
-    <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1200, margin: '0 auto', paddingTop: 0 }}>
-      <div className="dashboard-actions">
-        <button className="login-btn" onClick={handleLogout}>Logout</button>
-        <Link to="/profile"><button className="login-btn">Profile</button></Link>
-        <Link to="/reports"><button className="login-btn">Reports</button></Link>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', maxWidth: 1200, margin: '0 auto' }}>
+        <div ref={menuRef} style={{ position: 'relative', margin: '16px 0' }}>
+          <button
+            className="login-btn"
+            style={{ minWidth: 140, fontWeight: 600 }}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {username} &#9662;
+          </button>
+          {menuOpen && (
+            <div
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: '110%',
+                background: '#23233a',
+                borderRadius: 8,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                minWidth: 160,
+                zIndex: 10,
+                padding: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+              }}
+            >
+              <button className="login-btn" style={{ width: '100%' }} onClick={handleLogout}>Logout</button>
+              <Link to="/profile"><button className="login-btn" style={{ width: '100%' }}>Profile</button></Link>
+              <Link to="/reports"><button className="login-btn" style={{ width: '100%' }}>Reports</button></Link>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
 
     <div className="dashboard-flex" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0' }}>
       <div style={{ flex: 1, minWidth: 320, marginRight: 32 }}>
