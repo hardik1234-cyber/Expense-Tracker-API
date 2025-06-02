@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { api, setAuthToken } from '../api/api';
+import './Login.css';
 
 function Reports() {
   const [monthly, setMonthly] = useState(null);
@@ -39,64 +40,52 @@ function Reports() {
   };
 
   return (
-    <div>
-      <h2>Reports</h2>
-      <form onSubmit={fetchMonthly} style={{ marginBottom: 20 }}>
-        <label>Month (1-12): </label>
-        <input
-          type="number"
-          min="1"
-          max="12"
-          value={month}
-          onChange={e => setMonth(e.target.value)}
-          required
-        />
-        <label>Year: </label>
-        <input
-          type="number"
-          min="2000"
-          value={year}
-          onChange={e => setYear(e.target.value)}
-          required
-        />
-        <button type="submit">Get Monthly Report</button>
-      </form>
-      {monthly && (
-        <div>
-          <h3>Monthly Report for {monthly.month}</h3>
-          <p>Total Expenses: {monthly.total_expenses}</p>
-          <h4>Category Breakdown:</h4>
-          <ul>
-            {Object.entries(monthly.category_breakdown).map(([cat, amt]) => (
-              <li key={cat}>{cat}: {amt}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <form onSubmit={fetchYearly} style={{ marginTop: 40 }}>
-        <label>Year: </label>
-        <input
-          type="number"
-          min="2000"
-          value={year}
-          onChange={e => setYear(e.target.value)}
-          required
-        />
-        <button type="submit">Get Yearly Report</button>
-      </form>
-      {yearly && (
-        <div>
-          <h3>Yearly Report for {yearly.Year || yearly.year}</h3>
-          <p>Total Expenses: {yearly.total_expenses}</p>
-          <h4>Category Breakdown:</h4>
-          <ul>
-            {Object.entries(yearly.category_breakdown).map(([cat, amt]) => (
-              <li key={cat}>{cat}: {amt}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div className="login-bg">
+      <div className="login-card" style={{ maxWidth: 600 }}>
+        <h2 className="login-title">Reports</h2>
+        <form style={{ marginBottom: 32, color: "#fff" }}>
+          <label>
+            Month (1-12):
+            <input
+              className="login-input"
+              style={{ marginLeft: 8, marginRight: 16 }}
+              type="number"
+              value={month}
+              onChange={e => setMonth(e.target.value)}
+              min="1"
+              max="12"
+            />
+          </label>
+          <label>
+            Year:
+            <input
+              className="login-input"
+              style={{ marginLeft: 8, marginRight: 16 }}
+              type="number"
+              value={year}
+              onChange={e => setYear(e.target.value)}
+            />
+          </label>
+          <button className="login-btn" type="button">
+            Get Monthly Report
+          </button>
+        </form>
+        <form style={{ color: "#fff" }}>
+          <label>
+            Year:
+            <input
+              className="login-input"
+              style={{ marginLeft: 8, marginRight: 16 }}
+              type="number"
+              value={yearly}
+              onChange={e => setYearly(e.target.value)}
+            />
+          </label>
+          <button className="login-btn" type="button">
+            Get Yearly Report
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

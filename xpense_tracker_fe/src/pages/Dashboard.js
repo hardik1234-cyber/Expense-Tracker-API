@@ -83,15 +83,14 @@ function Dashboard() {
   };
 
   // Delete expense
-  const handleDelete = async id => {
-    try {
-      await api.delete(`/delete_expense_by_id/${id}`);
-      setExpenses(expenses.filter(exp => exp.id !== id));
-    } catch {
-      alert('Failed to delete expense');
-    }
-  };
-
+const handleDelete = async id => {
+  try {
+    await api.delete('/delete_expense_by_id', { params: { id } });
+    setExpenses(expenses.filter(exp => exp.id !== id));
+  } catch {
+    alert('Failed to delete expense');
+  }
+};
 return (
   <div className="login-bg">
     <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1200, margin: '0 auto', paddingTop: 32 }}>

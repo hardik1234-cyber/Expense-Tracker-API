@@ -95,7 +95,6 @@ return (
     </div>
   </div>
 );
-// ...existing code...
 }
 
 export default UserProfile;
