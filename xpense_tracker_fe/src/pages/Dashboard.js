@@ -93,10 +93,24 @@ const handleDelete = async id => {
     alert('Failed to delete expense');
   }
 };
+
 return (
   <div className="login-bg">
-    <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1200, margin: '0 auto', paddingTop: 32 }}>
-      <h2 className="login-title" style={{ margin: 0 }}>Expenses</h2>
+    {/* Top centered Expenses heading */}
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 32,
+        marginBottom: 0,
+      }}
+    >
+      <h2 className="login-title" style={{ margin: 0, textAlign: 'center' }}>Expenses</h2>
+    </div>
+
+    <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1200, margin: '0 auto', paddingTop: 0 }}>
       <div className="dashboard-actions">
         <button className="login-btn" onClick={handleLogout}>Logout</button>
         <Link to="/profile"><button className="login-btn">Profile</button></Link>
@@ -106,65 +120,6 @@ return (
 
     <div className="dashboard-flex" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0' }}>
       <div style={{ flex: 1, minWidth: 320, marginRight: 32 }}>
-
-{!showForm ? (
-  <button
-    className="login-btn"
-    style={{ width: '100%', margin: '32px 0' }}
-    onClick={() => setShowForm(true)}
-  >
-    Add Expense
-  </button>
-) : (
-  <form onSubmit={handleSubmit} className="dashboard-form">
-    <input
-      className="login-input"
-      name="category"
-      placeholder="Category"
-      value={form.category}
-      onChange={handleChange}
-      required
-    />
-    <input
-      className="login-input"
-      name="amount"
-      type="number"
-      placeholder="Amount"
-      value={form.amount}
-      onChange={handleChange}
-      required
-    />
-    <input
-      className="login-input"
-      name="description"
-      placeholder="Description"
-      value={form.description}
-      onChange={handleChange}
-    />
-    <input
-      className="login-input"
-      name="date"
-      type="date"
-      placeholder="Date"
-      value={form.date}
-      onChange={handleChange}
-      required
-    />
-    <button className="login-btn" type="submit">{editId ? 'Update' : 'Add'} Expense</button>
-    <button
-      className="login-btn"
-      type="button"
-      style={{ background: '#888', color: '#fff', marginLeft: 8 }}
-      onClick={() => {
-        setShowForm(false);
-        setEditId(null);
-        setForm({ category: '', amount: '', description: '', date: '' });
-      }}
-    >
-      Cancel
-    </button>
-  </form>
-)}
         <div className="dashboard-table-wrapper">
           <table className="dashboard-table">
             <thead>
@@ -191,6 +146,67 @@ return (
               ))}
             </tbody>
           </table>
+        </div>
+        {/* Remove the duplicate Expenses heading here */}
+        <div style={{ maxWidth: 400, margin: '32px auto 0 auto' }}>
+          {!showForm ? (
+            <button
+              className="login-btn"
+              style={{ width: '100%', margin: '32px 0' }}
+              onClick={() => setShowForm(true)}
+            >
+              Add Expense
+            </button>
+          ) : (
+            <form onSubmit={handleSubmit} className="dashboard-form">
+              <input
+                className="login-input"
+                name="category"
+                placeholder="Category"
+                value={form.category}
+                onChange={handleChange}
+                required
+              />
+              <input
+                className="login-input"
+                name="amount"
+                type="number"
+                placeholder="Amount"
+                value={form.amount}
+                onChange={handleChange}
+                required
+              />
+              <input
+                className="login-input"
+                name="description"
+                placeholder="Description"
+                value={form.description}
+                onChange={handleChange}
+              />
+              <input
+                className="login-input"
+                name="date"
+                type="date"
+                placeholder="Date"
+                value={form.date}
+                onChange={handleChange}
+                required
+              />
+              <button className="login-btn" type="submit">{editId ? 'Update' : 'Add'} Expense</button>
+              <button
+                className="login-btn"
+                type="button"
+                style={{ background: '#888', color: '#fff', marginLeft: 8 }}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditId(null);
+                  setForm({ category: '', amount: '', description: '', date: '' });
+                }}
+              >
+                Cancel
+              </button>
+            </form>
+          )}
         </div>
       </div>
       <div className="dashboard-chart" style={{ flex: '0 0 340px', maxWidth: 400, margin: '0 auto' }}>
