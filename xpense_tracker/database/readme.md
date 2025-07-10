@@ -5,4 +5,6 @@
 3. Paste the EXTERNAL URL in the DB_URL in "database_connection.py" and "sqlalchemy.url" in "alembic.ini" file
 4. deploy the changes and run the webapp with the latest changes.
 5. Run "alembic upgrade head" command.
-6. Push the latest changes in the deployed database with "alembic revision --autogenerate -m "added new tables"" command
+
+
+# Push the latest changes in the deployed database with "alembic revision --autogenerate -m "added new tables"" command  --> TODO when we make any changes to the table and want to upload to prod
