@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException,status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlmodel import Session, select
-from xpense_tracker.config import settings
+from database.config import settings
 from database.database_connection import get_session
 from database.tables import User
 from schemas.authentication.auth_model import DataToken
