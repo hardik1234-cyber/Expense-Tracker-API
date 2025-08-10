@@ -18,6 +18,7 @@ rapidfuzz = "^3.9.3"
 pytest = "^8.2.1"
 psycopg2-binary = "^2.9.9"
 prometheus-client = "^0.22.1"
+psutil = "^7.0.0"
 
 
 [build-system]
