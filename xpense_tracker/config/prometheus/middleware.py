@@ -1,4 +1,4 @@
-from datetime import time
+from time import time
 from starlette.middleware.base import BaseHTTPMiddleware
 from prometheus_client import Counter,Histogram
 
@@ -11,7 +11,7 @@ REQUEST_COUNT = Counter(
 REQUEST_LATENCY = Histogram(
     "http_request_latency_seconds",
     "HTTP request latency in seconds",
-    ["app_name", "method", "endpoint"]
+    ["app_name", "method", "endpoint", "http_status"]
 )
 
 class MetricsMiddleware(BaseHTTPMiddleware):
