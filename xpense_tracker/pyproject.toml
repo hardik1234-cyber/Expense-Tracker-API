@@ -17,6 +17,7 @@ fastapi-mail = "^1.4.1"
 rapidfuzz = "^3.9.3"
 pytest = "^8.2.1"
 psycopg2-binary = "^2.9.9"
+prometheus-client = "^0.22.1"
 
 
 [build-system]

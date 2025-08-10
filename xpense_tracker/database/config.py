@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    PROD_DB_URL: str
+    PROD_DB_URL: str | None = None
     lOCAL_DB_URL: str
     SECRET_KEY: str
     ALGORITHM : str

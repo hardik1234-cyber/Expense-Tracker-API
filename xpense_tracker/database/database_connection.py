@@ -1,7 +1,7 @@
 from sqlmodel import create_engine,Session
 from database.config import settings
 
-DB_URL = settings.PROD_DB_URL
+DB_URL = settings.lOCAL_DB_URL
 engine = create_engine(DB_URL)
 
 def get_session():
