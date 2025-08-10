@@ -1,3 +1,4 @@
+from datetime import time
 from starlette.middleware.base import BaseHTTPMiddleware
 from prometheus_client import Counter,Histogram
 
@@ -16,12 +17,19 @@ REQUEST_LATENCY = Histogram(
 class MetricsMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         response = await call_next(request)
-
+        start_time = time()
         REQUEST_COUNT.labels(
             app_name="xpense_tracker",
             method=request.method,
             endpoint=request.url.path,
             http_status=str(response.status_code)
         ).inc()
+
+        REQUEST_LATENCY.labels(
+        app_name="xpense_tracker",
+        method=request.method,
+        endpoint=request.url.path,
+        http_status=str(response.status_code)
+        ).observe(time() - start_time)
 
         return response
