@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import API from "../api";
+import "./Auth.css";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState(""); // <-- add this
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -11,7 +14,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // FastAPI expects x-www-form-urlencoded for login
       const formData = new URLSearchParams();
       formData.append("username", form.username);
       formData.append("password", form.password);
@@ -21,20 +23,40 @@ function Login() {
       });
 
       localStorage.setItem("token", res.data.access_token);
-      alert("Login successful!");
+      setErrorMessage(""); // clear error if login succeeds
       window.location.href = "/dashboard";
     } catch (err) {
-      alert(err.response?.data?.detail || "Invalid credentials");
+      setErrorMessage(err.response?.data?.detail || "Invalid credentials");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input name="username" placeholder="Username" onChange={handleChange} />
-      <input name="password" type="password" placeholder="Password" onChange={handleChange} />
-      <button type="submit">Login</button>
-    </form>
+    <div className="auth-container">
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h2>EXPENSE TRACKER</h2>
+        <input
+          name="username"
+          placeholder="Username"
+          value={form.username}
+          onChange={handleChange}
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+        />
+        <button type="submit">Sign In</button>
+
+        {/* Show error message if it exists */}
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
+        <div className="auth-options">
+          Don’t have an account? <Link to="/signup">Sign up</Link>
+        </div>
+      </form>
+    </div>
   );
 }
 
