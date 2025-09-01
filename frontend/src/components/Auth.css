@@ -1,6 +1,6 @@
 /* Full-screen background with a dimming overlay */
 .auth-container {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url("./xpense.jpg") no-repeat center center/cover;
   height: 100vh;
   display: flex;
@@ -8,9 +8,9 @@
   justify-content: center;
 }
 
-/* Center card */
+/* Center card - now with a less transparent background */
 .auth-form {
-  background: rgba(45, 45, 45, 0.9); /* A more opaque and slightly lighter dark grey */
+  background: rgba(45, 45, 45, 0.85); /* Increased opacity to 0.85 for better contrast */
   border-radius: 12px;
   padding: 2.5rem;
   width: 350px;
@@ -36,12 +36,13 @@
   outline: none;
   font-size: 16px;
   color: #000; /* Ensures text is visible */
-  background: #fff; /* Use white for better contrast */
+  background: #fff; /* Use solid white for best contrast */
   cursor: text; /* Ensures cursor is visible */
 }
 
+/* Placeholder text */
 .auth-form input::placeholder {
-  color: #ddd;
+  color: #888; /* Changed to a darker grey for better visibility */
 }
 
 /* Button */
