@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
-  const [errorMessage, setErrorMessage] = useState(""); // <-- add this
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,9 +22,14 @@ function Login() {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
 
+      // Save token and username
       localStorage.setItem("token", res.data.access_token);
+      localStorage.setItem("username", form.username);
+
       setErrorMessage(""); // clear error if login succeeds
-      window.location.href = "/dashboard";
+
+      // Redirect to Dashboard page
+      window.location.href = "/reportdashboard";
     } catch (err) {
       setErrorMessage(err.response?.data?.detail || "Invalid credentials");
     }
