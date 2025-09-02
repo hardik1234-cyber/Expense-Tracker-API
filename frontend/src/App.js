@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
