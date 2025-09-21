@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./pages/Dashboard";
 import ReportDashboard from "./pages/ReportDashboard";
+import UserManagement from "./pages/UserManagement";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/reportdashboard" element={<ReportDashboard />} />
+        <Route path="/user-management" element={<UserManagement />} />
       </Routes>
     </Router>
   );

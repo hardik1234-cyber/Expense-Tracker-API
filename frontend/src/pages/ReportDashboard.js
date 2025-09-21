@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import API from "../api";
 import {
   PieChart,
@@ -63,6 +64,32 @@ function ReportDashboard() {
 
   return (
     <div style={{ padding: "20px" }}>
+      {/* User Icon at top right */}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 30,
+          zIndex: 1000,
+        }}
+      >
+        <Link to="/user-management" title="User Management">
+          <span
+            style={{
+              fontSize: "2rem",
+              cursor: "pointer",
+              borderRadius: "50%",
+              padding: "6px",
+              background: "#f3f3f3",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+              display: "inline-block",
+            }}
+          >
+            👤
+          </span>
+        </Link>
+      </div>
+
       <h1 style={{ display: "flex", alignItems: "center" }}>
         📊 Reporting Dashboard
       </h1>
