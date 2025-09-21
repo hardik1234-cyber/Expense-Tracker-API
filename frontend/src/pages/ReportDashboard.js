@@ -64,13 +64,16 @@ function ReportDashboard() {
 
   return (
     <div style={{ padding: "20px" }}>
-      {/* User Icon at top right */}
+      {/* User Icon and Add Expense Button at top right */}
       <div
         style={{
           position: "absolute",
           top: 20,
           right: 30,
           zIndex: 1000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
         }}
       >
         <Link to="/user-management" title="User Management">
@@ -87,6 +90,23 @@ function ReportDashboard() {
           >
             👤
           </span>
+        </Link>
+        {/* Add Expense Button */}
+        <Link to="/add-expense" style={{ marginTop: "20px", textDecoration: "none" }}>
+          <button
+            style={{
+              padding: "8px 18px",
+              backgroundColor: "#6c63ff",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              fontWeight: "bold",
+              fontSize: "1rem",
+              cursor: "pointer",
+            }}
+          >
+            + Add Expense
+          </button>
         </Link>
       </div>
 

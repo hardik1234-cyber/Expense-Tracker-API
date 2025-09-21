@@ -5,6 +5,7 @@ import Signup from "./components/Signup";
 import Dashboard from "./pages/Dashboard";
 import ReportDashboard from "./pages/ReportDashboard";
 import UserManagement from "./pages/UserManagement";
+import AddExpense from "./pages/AddExpense";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/reportdashboard" element={<ReportDashboard />} />
         <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/add-expense" element={<AddExpense />} />
       </Routes>
     </Router>
   );
