@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { FaTrash } from "react-icons/fa";
 
 function ReportDashboard() {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -119,28 +118,6 @@ function ReportDashboard() {
     fontWeight: 700,
     fontSize: "1.1rem",
     padding: "12px 0"
-  };
-
-  // Delete expense handler (requires expense id)
-  const handleDeleteExpense = async (category) => {
-    try {
-      // Find the expense by category (assumes you have an array of expenses with id)
-      // You should update your backend to return an array of expenses with id, category, amount, etc.
-      const expenses = monthlyExpenseData.expenses || [];
-      const expense = expenses.find(e => e.category === category);
-      if (!expense) {
-        alert("Expense not found for deletion.");
-        return;
-      }
-      const token = localStorage.getItem("token");
-      await API.delete("/delete_expense_by_id", {
-        params: { id: expense.id },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      handleFetchMonthly();
-    } catch (err) {
-      alert("Failed to delete expense");
-    }
   };
 
   return (
@@ -350,25 +327,6 @@ function ReportDashboard() {
                     >
                       <td style={{ position: "relative" }}>
                         {category}
-                        {hoveredRow === idx && (
-                          <button
-                            onClick={() => handleDeleteExpense(category)}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              position: "absolute",
-                              right: -30,
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              color: "#e74c3c",
-                              fontSize: "1.1rem",
-                            }}
-                            title="Delete"
-                          >
-                            <FaTrash />
-                          </button>
-                        )}
                       </td>
                       <td>{amount}</td>
                     </tr>
