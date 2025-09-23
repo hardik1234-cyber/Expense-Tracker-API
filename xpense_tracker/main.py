@@ -3,7 +3,6 @@ from services.authentication.auth import auth_router
 from services.UserManagementSystem.ums import ums_router
 from services.ExpenseManagementSystem.ems import ems_router
 from services.ReportingManagementSystem.rms import rms_router
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
