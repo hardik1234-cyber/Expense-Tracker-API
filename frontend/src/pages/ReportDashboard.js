@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../api";
 import {
   PieChart,
@@ -19,10 +19,19 @@ function ReportDashboard() {
   const [yearlyExpenseData, setYearlyExpenseData] = useState(null);
 
   const [error, setError] = useState("");
-  const [hoveredRow, setHoveredRow] = useState(null);
+
+  // User dropdown state
+  const [userDropdown, setUserDropdown] = useState(false);
+  const [showUserDetails, setShowUserDetails] = useState(false);
+  const [showEditDetails, setShowEditDetails] = useState(false);
+  const [editEmail, setEditEmail] = useState("");
+  const [editPassword, setEditPassword] = useState("");
+  const [editMessage, setEditMessage] = useState("");
+  const [userDetails, setUserDetails] = useState({ username: "", email: "" });
 
   const COLORS = ["#0088FE", "#FF8042", "#00C49F", "#FFBB28", "#AF19FF"];
   const years = [2023, 2024, 2025];
+  const navigate = useNavigate();
 
   // Fetch Monthly
   const handleFetchMonthly = async () => {
@@ -82,6 +91,58 @@ function ReportDashboard() {
     // eslint-disable-next-line
   }, [month, year]);
 
+  // Fetch user details for dropdown (from API for email)
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const username = localStorage.getItem("username");
+      const token = localStorage.getItem("token");
+      if (userDropdown && username && token) {
+        try {
+          const res = await API.get("/user_details", {
+            params: { username },
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUserDetails({ username, email: res.data.email });
+          setEditEmail(res.data.email || "");
+        } catch {
+          setUserDetails({ username, email: "" });
+          setEditEmail("");
+        }
+      }
+    };
+    fetchUserDetails();
+    // eslint-disable-next-line
+  }, [userDropdown]);
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    navigate("/login");
+  };
+
+  // Handle edit details submit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditMessage("");
+    try {
+      const token = localStorage.getItem("token");
+      await API.post("/edit_user", {
+        username: userDetails.username,
+        email: editEmail,
+        password: editPassword,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setEditMessage("Details updated!");
+      localStorage.setItem("email", editEmail);
+      setShowEditDetails(false);
+    } catch (err) {
+      setEditMessage("Failed to update details.");
+    }
+  };
+
   // Table style for thin, centered, elevated table
   const tableStyle = {
     margin: "40px auto 0 auto",
@@ -134,7 +195,8 @@ function ReportDashboard() {
           alignItems: "flex-end",
         }}
       >
-        <Link to="/user-management" title="User Management">
+        {/* User Icon with Dropdown */}
+        <div style={{ position: "relative" }}>
           <span
             style={{
               fontSize: "2rem",
@@ -145,10 +207,47 @@ function ReportDashboard() {
               boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
               display: "inline-block",
             }}
+            onClick={() => setUserDropdown((v) => !v)}
           >
             👤
           </span>
-        </Link>
+          {userDropdown && (
+            <div
+              style={{
+                position: "absolute",
+                top: "110%",
+                right: 0,
+                background: "#fff",
+                border: "1px solid #eee",
+                borderRadius: "8px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+                zIndex: 1001,
+                minWidth: 180,
+                padding: "8px 0"
+              }}
+            >
+              <div
+                style={{ padding: "10px 20px", cursor: "pointer" }}
+                onClick={() => { setShowUserDetails(true); setUserDropdown(false); }}
+              >
+                User Details
+              </div>
+              <div
+                style={{ padding: "10px 20px", cursor: "pointer" }}
+                onClick={() => { setShowEditDetails(true); setUserDropdown(false); }}
+              >
+                Edit Details
+              </div>
+              <div
+                style={{ padding: "10px 20px", cursor: "pointer", color: "#e74c3c" }}
+                onClick={handleLogout}
+              >
+                Logout
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Add Expense Button */}
         <Link to="/add-expense" style={{ marginTop: "20px", textDecoration: "none" }}>
           <button
@@ -218,6 +317,72 @@ function ReportDashboard() {
           )}
         </div>
       </div>
+
+      {/* User Details Modal */}
+      {showUserDetails && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
+          background: "rgba(0,0,0,0.18)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000
+        }}>
+          <div style={{
+            background: "#fff", borderRadius: 12, padding: 32, minWidth: 320, boxShadow: "0 2px 16px rgba(0,0,0,0.12)"
+          }}>
+            <h3>User Details</h3>
+            <div><b>Username:</b> {userDetails.username}</div>
+            <div><b>Email:</b> {userDetails.email}</div>
+            <button
+              style={{ marginTop: 18, padding: "6px 18px", borderRadius: 5, border: "none", background: "#6c63ff", color: "#fff", cursor: "pointer" }}
+              onClick={() => setShowUserDetails(false)}
+            >Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Details Modal */}
+      {showEditDetails && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
+          background: "rgba(0,0,0,0.18)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000
+        }}>
+          <div style={{
+            background: "#fff", borderRadius: 12, padding: 32, minWidth: 320, boxShadow: "0 2px 16px rgba(0,0,0,0.12)"
+          }}>
+            <h3>Edit Details</h3>
+            <form onSubmit={handleEditSubmit}>
+              <div style={{ marginBottom: 12 }}>
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={editEmail}
+                  onChange={e => setEditEmail(e.target.value)}
+                  style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <label>New Password:</label>
+                <input
+                  type="password"
+                  value={editPassword}
+                  onChange={e => setEditPassword(e.target.value)}
+                  style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                style={{ padding: "8px 18px", borderRadius: 5, border: "none", background: "#00C49F", color: "#fff", cursor: "pointer", fontWeight: 600 }}
+              >Save</button>
+              <button
+                type="button"
+                style={{ marginLeft: 10, padding: "8px 18px", borderRadius: 5, border: "none", background: "#eee", color: "#333", cursor: "pointer" }}
+                onClick={() => setShowEditDetails(false)}
+              >Cancel</button>
+            </form>
+            {editMessage && <div style={{ color: "green", marginTop: 10 }}>{editMessage}</div>}
+          </div>
+        </div>
+      )}
 
       <h1 style={{ display: "flex", alignItems: "center" }}>
         📊 Reporting Dashboard
@@ -318,13 +483,8 @@ function ReportDashboard() {
               </thead>
               <tbody>
                 {Object.entries(monthlyExpenseData.category_breakdown).map(
-                  ([category, amount], idx) => (
-                    <tr
-                      key={category}
-                      onMouseEnter={() => setHoveredRow(idx)}
-                      onMouseLeave={() => setHoveredRow(null)}
-                      style={{ position: "relative" }}
-                    >
+                  ([category, amount]) => (
+                    <tr key={category}>
                       <td style={{ position: "relative" }}>
                         {category}
                       </td>
