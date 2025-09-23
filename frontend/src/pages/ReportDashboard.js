@@ -274,10 +274,10 @@ function ReportDashboard() {
         <div style={{ marginTop: "30px" }}>
           <div style={totalCardStyle}>
             <span style={{ fontSize: "1.2rem", color: "#333", fontWeight: 500 }}>
-              Total Expense for {monthlyExpenseData.month}-{year}
+              Total Expense for {new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}
             </span>
             <span style={{ fontSize: "2.2rem", color: "#0088FE", fontWeight: 700, marginTop: 6 }}>
-              ${monthlyExpenseData.total_expenses}
+              ₹{monthlyExpenseData.total_expenses}
             </span>
           </div>
 
@@ -346,7 +346,7 @@ function ReportDashboard() {
               Total Expense for {yearlyExpenseData.year}
             </span>
             <span style={{ fontSize: "2.2rem", color: "#00C49F", fontWeight: 700, marginTop: 6 }}>
-              ${yearlyExpenseData.total_expenses}
+              ₹{yearlyExpenseData.total_expenses}
             </span>
           </div>
 
