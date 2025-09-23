@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000", // FastAPI backend
+  baseURL: "https://xpense-tracker-backend-l6dk.onrender.com", // FastAPI backend
 });
 
 // Add Authorization header if token exists

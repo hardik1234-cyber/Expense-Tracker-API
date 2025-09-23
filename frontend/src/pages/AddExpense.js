@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:8000"; // Change if needed
+const API_URL = "https://xpense-tracker-backend-l6dk.onrender.com"; // Change if needed
 
 export default function AddExpense() {
   const [amount, setAmount] = useState("");
