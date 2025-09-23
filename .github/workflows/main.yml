@@ -24,3 +24,10 @@ jobs:
 
       - name: Push the image to docker hub
         run: docker push '${{ secrets.DOCKER_USERNAME }}'/xpense_tracker_backend:latest
+
+      - name: Build Frontend Docker Image
+        working-directory: ./frontend
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/xpense_tracker_frontend:latest -f Dockerfile.frontend .
+
+      - name: Push Frontend Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/xpense_tracker_frontend:latest
