@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import ReportDashboard from "./pages/ReportDashboard";
 import UserManagement from "./pages/UserManagement";
 import AddExpense from "./pages/AddExpense";
-
+import './App.css';
 function App() {
   return (
     <Router>
