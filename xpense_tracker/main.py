@@ -6,6 +6,14 @@ from services.ReportingManagementSystem.rms import rms_router
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace with specific origins in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get('/')
 def on_startup():
     return {"Welcome to Expense Tracker API"}
