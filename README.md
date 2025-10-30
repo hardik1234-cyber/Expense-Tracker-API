@@ -1,3 +1,12 @@
+⚠️ NOTE :  
+1. While running this full stack app please open both the links , as we have deployed this app in a containerized way on render as 2 webapps.
+2. One for backend and one for frontend.
+3. Render takes some time to load (~ 15sec) for each webapp.
+
+Frontend webapp link : https://xpense-tracker-frontend.onrender.com/
+
+Backend webapp link : https://xpense-tracker-backend-l6dk.onrender.com/
+______________________________________________________________________________________________
 # 💸 Expense Tracker API
 
 A RESTful API for tracking personal expenses, managing user profiles, and generating monthly and yearly financial reports. Built with **FastAPI**, **PostgreSQL**, and **JWT** authentication for secure and efficient data handling.
