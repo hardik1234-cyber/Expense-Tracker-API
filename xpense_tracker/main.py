@@ -9,7 +9,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://xpense-tracker-frontend.onrender.com"],  # Replace with specific origins in production
+    allow_origins=["https://xpense-tracker-frontend.onrender.com","http://127.0.0.1:3000","http://localhost:3000"],  # Replace with specific origins in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
